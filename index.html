@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Cross Akra Maker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .btn-remove {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        .results {
+            margin-top: 30px;
+            border-top: 2px dashed #bdc3c7;
+            padding-top: 25px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 5px 0;
+        }
+        .pairs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .pair-box {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 40px;
+            text-align: center;
+        }
+        .filtered-pair {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            transform: scale(1.1);
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        .total-count {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .section-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .instructions {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .filter-controls button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✧ LINK CROSS AKRA MAKER ✧</h1>
+        
+        <div class="instructions">
+            <strong>How to use:</strong><br>
+            1. Enter numbers in Link 1 and Link 2<br>
+            2. Click "Generate All Pairs" button<br>
+            3. Enter filter digits in Link 3 (e.g. 7,9,0,6)<br>
+            4. Pairs containing ANY of these digits will be shown<br>
+            5. Use "Remove Filter" to show all pairs again<br>
+            <br>
+            <strong>اردو ہدایات:</strong><br>
+            1. پہلے Link 1 اور Link 2 میں نمبرز داخل کریں<br>
+            2. "Generate All Pairs" بٹن دبائیں<br>
+            3. Link 3 میں فلٹر ہندسے داخل کریں (مثلاً 7,9,0,6)<br>
+            4. جوڑے جن میں کوئی بھی یہ ہندسے ہوں وہ دکھائے جائیں گے<br>
+            5. "Remove Filter" سے فلٹر ہٹا کر تمام جوڑے دیکھیں
+        </div>
+        
+        <div class="input-group">
+            <label for="linkOne">🔗 Link One:</label>
+            <input type="text" id="linkOne" placeholder="Enter numbers (e.g. 24)">
+        </div>
+        
+        <div class="input-group">
+            <label for="linkTwo">🔗 Link Two:</label>
+            <input type="text" id="linkTwo" placeholder="Enter numbers (e.g. 65)">
+        </div>
+        
+        <button onclick="generatePairs()">✨ Generate All Pairs ✨</button>
+        
+        <div id="error" class="error"></div>
+        
+        <div class="results" id="results" style="display: none;">
+            <div class="result-title">🔄 All Generated Pairs 🔄</div>
+            
+            <div class="section-container">
+                <div class="result-title">➡️ Forward Pairs</div>
+                <div class="pairs-container" id="forwardPairs"></div>
+            </div>
+            
+            <div class="section-container">
+                <div class="result-title">⬅️ Reverse Pairs</div>
+                <div class="pairs-container" id="reversePairs"></div>
+            </div>
+            
+            <div class="total-count">Total Pairs Generated: <span id="totalCount">0</span></div>
+            
+            <div class="input-group" style="margin-top: 30px;">
+                <label for="linkThree">🔍 Link Three (Filter Digits):</label>
+                <input type="text" id="linkThree" placeholder="Enter filter digits (e.g. 7,9,0,6)" oninput="applyFilter()">
+            </div>
+            
+            <div class="filter-controls">
+                <button onclick="applyFilter()">🔎 Apply Filter</button>
+                <button class="btn-remove" onclick="removeFilter()">🗑️ Remove Filter</button>
+            </div>
+            
+            <div class="section-container" id="filterResults" style="display: none;">
+                <div class="result-title">🎯 Filtered Final Results</div>
+                <div class="pairs-container" id="filteredPairs"></div>
+                <div class="total-count">Filtered Pairs: <span id="filteredCount">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allPairs = [];
+        let currentFilter = null;
+        
+        function generatePairs() {
+            // Clear previous results and errors
+            document.getElementById('error').textContent = '';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('filterResults').style.display = 'none';
+            document.getElementById('linkThree').value = '';
+            currentFilter = null;
+            
+            // Get input values
+            const linkOne = document.getElementById('linkOne').value;
+            const linkTwo = document.getElementById('linkTwo').value;
+            
+            // Validate inputs
+            if (!linkOne || !linkTwo) {
+                showError('❗ Please enter values for both Link One and Link Two');
+                return;
+            }
+            
+            if (!/^\d+$/.test(linkOne) || !/^\d+$/.test(linkTwo)) {
+                showError('❗ Please enter numeric values only (0-9)');
+                return;
+            }
+            
+            // Convert to arrays of digits
+            const digitsOne = linkOne.split('');
+            const digitsTwo = linkTwo.split('');
+            
+            // Generate pairs
+            const forwardPairs = [];
+            const reversePairs = [];
+            
+            for (const i of digitsOne) {
+                for (const j of digitsTwo) {
+                    forwardPairs.push(i + j);
+                    reversePairs.push(j + i);
+                }
+            }
+            
+            // Combine all pairs
+            allPairs = [...forwardPairs, ...reversePairs];
+            
+            // Display forward pairs
+            displayPairs(forwardPairs, 'forwardPairs');
+            
+            // Display reverse pairs
+            displayPairs(reversePairs, 'reversePairs');
+            
+            // Show total count
+            document.getElementById('totalCount').textContent = allPairs.length;
+            
+            // Show results section with animation
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        function applyFilter() {
+            const filterInput = document.getElementById('linkThree').value;
+            const filteredPairsContainer = document.getElementById('filteredPairs');
+            const filterResultsSection = document.getElementById('filterResults');
+            
+            if (!filterInput) {
+                removeFilter();
+                return;
+            }
+            
+            // Extract all digits from filter input
+            const filterDigits = filterInput.replace(/\D/g, '').split('');
+            
+            if (filterDigits.length === 0) {
+                showError('❗ Please enter valid digits for filtering');
+                return;
+            }
+            
+            currentFilter = filterDigits;
+            
+            // Find pairs containing ANY of the filter digits
+            const matchedPairs = allPairs.filter(pair => {
+                return filterDigits.some(digit => pair.includes(digit));
+            });
+            
+            // Display filtered results
+            displayPairs(matchedPairs, 'filteredPairs', true);
+            document.getElementById('filteredCount').textContent = matchedPairs.length;
+            filterResultsSection.style.display = 'block';
+        }
+        
+        function removeFilter() {
+            document.getElementById('linkThree').value = '';
+            document.getElementById('filterResults').style.display = 'none';
+            currentFilter = null;
+        }
+        
+        function displayPairs(pairs, elementId, isFiltered = false) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+            
+            pairs.forEach(pair => {
+                const pairBox = document.createElement('div');
+                pairBox.className = isFiltered ? 'pair-box filtered-pair' : 'pair-box';
+                pairBox.textContent = pair;
+                container.appendChild(pairBox);
+            });
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
