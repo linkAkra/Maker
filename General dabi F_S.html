@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pick 3 Tic Tac Toe Final</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      background: #fff;
+      color: black;
+    }
+    .frame {
+      border: 2px solid red;
+      padding: 10px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      color: red;
+      font-size: 22px;
+      text-align: center;
+    }
+    .input-area {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      font-size: 20px;
+      width: 80px;
+      text-align: center;
+    }
+    button {
+      font-size: 16px;
+      margin-left: 5px;
+      padding: 5px 10px;
+    }
+    .grid-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .grid {
+      border: 3px solid red;
+      padding: 5px;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    td {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      vertical-align: middle;
+      border: 2px solid red;
+      font-size: 22px;
+    }
+    .results {
+      margin-top: 10px;
+      font-size: 16px;
+      text-align: left;
+    }
+    .red {
+      color: red;
+      font-weight: bold;
+    }
+    .green {
+      color: green;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+    .footer {
+      margin-top: 10px;
+      background: lightgray;
+      padding: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <h2>Your Personal Numbers</h2>
+    <div><strong>Tic Tac Toe (Up & Down)</strong> based on number <span id="numLabel">___</span></div>
+
+    <div class="input-area">
+      <input type="text" id="inputNumber" maxlength="3" />
+      <button onclick="generateGrids()">Start</button>
+      <button onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="grid-container">
+      <div>
+        <div class="grid">
+          <table id="minusGrid"></table>
+        </div>
+        <div class="results" id="minusResult"></div>
+      </div>
+
+      <div>
+        <div class="grid">
+          <table id="plusGrid"></table>
+        </div>
+        <div class="results" id="plusResult"></div>
+      </div>
+    </div>
+
+    <div class="footer">Tue Apr 29 2025</div>
+  </div>
+
+<script>
+function clearAll() {
+  document.getElementById("inputNumber").value = "";
+  document.getElementById("minusGrid").innerHTML = "";
+  document.getElementById("plusGrid").innerHTML = "";
+  document.getElementById("minusResult").innerHTML = "";
+  document.getElementById("plusResult").innerHTML = "";
+  document.getElementById("numLabel").textContent = "___";
+}
+
+function generateGrids() {
+  const input = document.getElementById("inputNumber").value.trim();
+  if (!/^[0-9]{3}$/.test(input)) {
+    alert("Please enter a valid 3-digit number.");
+    return;
+  }
+
+  document.getElementById("numLabel").textContent = input;
+
+  const [a, b, c] = input.split('').map(Number);
+
+  function fillGrid(isPlus) {
+    const grid = [["", "", ""], ["", "", ""], ["", "", ""]];
+    grid[0][0] = a;
+    grid[1][1] = b;
+    grid[2][2] = c;
+
+    let nums = [];
+    if (isPlus) {
+      for (let i = 1; i <= 6; i++) {
+        nums.push((7 + i) % 10);
+      }
+    } else {
+      for (let i = 1; i <= 6; i++) {
+        nums.push((7 - i + 10) % 10);
+      }
+    }
+
+    const fillOrder = [[0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1]];
+
+    for (let i = 0; i < fillOrder.length; i++) {
+      const [r, col] = fillOrder[i];
+      grid[r][col] = nums[i];
+    }
+    return grid;
+  }
+
+  function renderGrid(grid, tableId) {
+    let html = "";
+    for (let row of grid) {
+      html += "<tr>" + row.map(cell => `<td>${cell}</td>`).join('') + "</tr>";
+    }
+    document.getElementById(tableId).innerHTML = html;
+  }
+
+  const minusGrid = fillGrid(false);
+  const plusGrid = fillGrid(true);
+
+  renderGrid(minusGrid, "minusGrid");
+  renderGrid(plusGrid, "plusGrid");
+
+  // Fake results for now
+  document.getElementById("minusResult").innerHTML = `
+    <div class="green">Original</div>
+    Horizontal: <span class="red">509, 198, 237</span><br>
+    Vertical: <span class="red">512, 093, 987</span><br>
+    Diagonal: <span class="red">992 - (597)</span><br><br>
+    <div class="green">Bonus</div>
+    Corners: <span class="red">150, 098, 873, 321</span><br>
+    Diamond: <span class="red">108, 083, 831, 310</span><br>
+    Cross: <span class="red">091, 890, 398, 193</span><br>
+  `;
+
+  document.getElementById("plusResult").innerHTML = `
+    <div class="green">Original</div>
+    Horizontal: <span class="red">545, 396, 217</span><br>
+    Vertical: <span class="red">532, 491, 567</span><br>
+    Diagonal: <span class="red">592 - (597)</span><br><br>
+    <div class="green">Bonus</div>
+    Corners: <span class="red">354, 456, 671, 123</span><br>
+    Diamond: <span class="red">346, 461, 613, 134</span><br>
+    Cross: <span class="red">493, 694, 196, 391</span><br>
+  `;
+}
+</script>
+</body>
+</html>
